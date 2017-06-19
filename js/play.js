@@ -22,7 +22,8 @@ var playState = {
         this.player.animations.add('run', Phaser.Animation.generateFrameNames('green_run_', 1, 6), 10, true);
         //player.animations.add('right', [5, 6, 7, 8], 10, true);
         
-        this.player.anchor.setTo( .5, .5 );
+        this.player.scale.setTo(0.5, 0.5);
+        //this.player.anchor.setTo(0.5, 0.5 );
         
     },
     
@@ -36,14 +37,14 @@ var playState = {
         {
             //	Move to the left
             this.player.body.velocity.x = -100;
-            this.player.scale.setTo(-1,1);
+            this.player.scale.setTo(-0.5, 0.5);
             this.player.animations.play('run');
         }
         else if (cursors.right.isDown)
         {
             //	Move to the right
             this.player.body.velocity.x = 50;
-            this.player.scale.setTo(1,1);
+            this.player.scale.setTo(0.5, 0.5);
             this.player.animations.play('walk');
         }
         else
