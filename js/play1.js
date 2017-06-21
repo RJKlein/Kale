@@ -1,4 +1,4 @@
-var playState = {
+var play1State = {
     
     create: function() {
         
@@ -7,8 +7,7 @@ var playState = {
         
         // Our controls.
         cursors = game.input.keyboard.createCursorKeys();
-        this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
+        
         // create the player sprite and enable physics
         this.player = game.add.sprite(16, 356, 'player');
         game.physics.enable(this.player, Phaser.Physics.ARCADE);
@@ -19,8 +18,7 @@ var playState = {
         
         // Our two animations, walking left and right.
         //player.animations.add('left', [0, 1, 2, 3], 10, true);
-        //this.player.animations.add('jump', Phaser.Animation.generateFrameNames('green_jump_', 1, 4), 10, true);   
-        this.player.animations.add('jump', [ 'green_jump_1', 'green_jump_4','green_jump_1', 'green_jump_2', 'green_jump_3', 'green_jump_4', 'green_jump_1'], 10, true);   
+        this.player.animations.add('walk', Phaser.Animation.generateFrameNames('green_walk_', 1, 6), 10, true);   
         this.player.animations.add('run', Phaser.Animation.generateFrameNames('green_run_', 1, 6), 10, true);
         //player.animations.add('right', [5, 6, 7, 8], 10, true);
         
@@ -49,13 +47,6 @@ var playState = {
             this.player.scale.setTo(1,1);
             this.player.animations.play('run');
         }
-        else if (this.spaceKey.isDown) 
-        {
-            //	Move to the right
-            this.player.body.velocity.x = 100;
-            this.player.scale.setTo(1,1);
-            this.player.animations.play('jump');
-        }
         else
         {
             //	Stand still
@@ -69,6 +60,6 @@ var playState = {
     },
     
     win: function() {
-        game.state.start('play1');
+        game.state.start('win');
     }
 };
