@@ -12,6 +12,7 @@ var loadState= {
        	game.load.image('ground2', 'assets/mars.png');
         game.load.image('gameover', 'assets/gameover.jpg');
         game.load.atlas('player','assets/spritesheet.png', 'assets/sprites.json');
+        game.load.atlas('kane','assets/kanesheet.png', 'assets/kane.json');
         
     },
     

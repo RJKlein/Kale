@@ -35,7 +35,7 @@ var playState = {
         // create the player sprite and enable physics
         this.player = game.add.sprite(16, 316, 'player');
         game.physics.enable(this.player, Phaser.Physics.ARCADE);
-        // Player physics properties. Give the little guy a slight bounce.
+        // Player physics properties. Give KALE a slight bounce.
         this.player.body.bounce.y = 0.2;
         this.player.body.gravity.y = 125;
        
