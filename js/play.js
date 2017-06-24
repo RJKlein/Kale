@@ -25,7 +25,7 @@ var playState = {
         //player.animations.add('right', [5, 6, 7, 8], 10, true);
         
         // set the axis to the center of the image
-        this.player.anchor.setTo(0.5, 0.5 );
+        this.player.anchor.setTo(.5,.5);
         
     },
     
@@ -38,22 +38,22 @@ var playState = {
         if (cursors.left.isDown)
         {
             //	Move to the left
-            this.player.body.velocity.x = -100;
             this.player.scale.setTo(-1,1);
+            this.player.body.velocity.x = -100;
             this.player.animations.play('run');
         }
         else if (cursors.right.isDown)
         {
             //	Move to the right
-            this.player.body.velocity.x = 100;
             this.player.scale.setTo(1,1);
+            this.player.body.velocity.x = 100;
             this.player.animations.play('run');
         }
         else if (this.spaceKey.isDown) 
         {
             //	Move to the right
-            this.player.body.velocity.x = 100;
             this.player.scale.setTo(1,1);
+            this.player.body.velocity.x = 100;
             this.player.animations.play('jump');
         }
         else
