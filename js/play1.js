@@ -40,7 +40,7 @@ var play1State = {
         this.player.body.gravity.y = 125;
        
         // create the enemy sprite and enable physics
-        this.kane = game.add.sprite(706, 316, 'kane');
+        this.kane = game.add.sprite(680, 316, 'kane');
         game.physics.enable(this.kane, Phaser.Physics.ARCADE);
         // kane's physics properties. Give KANE a slight bounce.
         this.kane.body.bounce.y = 0.2;
@@ -64,7 +64,7 @@ var play1State = {
         this.kane.animations.add('idle', Phaser.Animation.generateFrameNames('kane_idle_', 1, 3), 10, false);
                 
         // set the axis to the center of the image
-        //this.player.anchor.setTo(.5,.5);
+        // this.player.anchor.setTo(.5,.5);
         this.kane.anchor.setTo(.5,.5);
         this.kane.scale.setTo(-1,1);
 
