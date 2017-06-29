@@ -3,8 +3,7 @@ var play1State = {
             
     create: function() {
         
-        // A simple background for our game
-        // game.add.sprite(0, 0, 'sky');
+
 
         // Our controls.
         cursors = game.input.keyboard.createCursorKeys();
@@ -31,16 +30,19 @@ var play1State = {
         
         // This stops it from falling away when you jump on it
         this.ground.body.immovable = true;
-       
+
+        // A simple background for our game on top of our platform
+        game.add.sprite(0, 0, 'planet');
+        
         // create the player sprite and enable physics
-        this.player = game.add.sprite(16, 100, 'player');
+        this.player = game.add.sprite(80, 316, 'player');
         game.physics.enable(this.player, Phaser.Physics.ARCADE);
         // Player physics properties. Give KALE a slight bounce.
         this.player.body.bounce.y = 0.2;
         this.player.body.gravity.y = 125;
        
         // create the enemy sprite and enable physics
-        this.kane = game.add.sprite(680, 316, 'kane');
+        this.kane = game.add.sprite(680, 340, 'kane');
         game.physics.enable(this.kane, Phaser.Physics.ARCADE);
         // kane's physics properties. Give KANE a slight bounce.
         this.kane.body.bounce.y = 0.2;
@@ -52,7 +54,7 @@ var play1State = {
         
         // Our animations, run(true = looped), jump and idle are runOnce (false).
         this.player.animations.add('fire', Phaser.Animation.generateFrameNames('green_fire_', 1, 11), 12, false); 
-        this.player.animations.add('attack', Phaser.Animation.generateFrameNames('green_attack_', 1, 4), 5, false); 
+        this.player.animations.add('attack', Phaser.Animation.generateFrameNames('green_attack_', 1, 4), 12, false); 
         this.player.animations.add('jump', ['green_jump_1', 'green_jump_2', 'green_jump_3', 'green_jump_4', 'green_jump_4', 'green_jump_3'], 5, false);           
         this.player.animations.add('run', Phaser.Animation.generateFrameNames('green_run_', 1, 6), 10, true);
         this.player.animations.add('idle', Phaser.Animation.generateFrameNames('green_idle_', 1, 3), 10, false);
@@ -64,9 +66,8 @@ var play1State = {
         this.kane.animations.add('idle', Phaser.Animation.generateFrameNames('kane_idle_', 1, 3), 10, false);
                 
         // set the axis to the center of the image
-        // this.player.anchor.setTo(.5,.5);
-        this.kane.anchor.setTo(.5,.5);
-        this.kane.scale.setTo(-1,1);
+        this.player.scale.setTo(.5,.5);
+        this.kane.scale.setTo(-.5,.5);
 
     },
     
@@ -88,20 +89,20 @@ var play1State = {
         else if (this.spaceKey.isDown) 
         {
             //	start a fire
-            this.fire = 80;
+            this.fire = 60;
             this.player.animations.play('attack');
         }
         else if (cursors.left.isDown)
         {
             //	Move to the left
-            this.player.scale.setTo(-1,1);
+            this.player.scale.setTo(-.5,.5);
             this.player.body.velocity.x = -100;
             this.player.animations.play('run');
         }
         else if (cursors.right.isDown)
         {
             //	Move to the right
-            this.player.scale.setTo(1,1);
+            this.player.scale.setTo(.5,.5);
             this.player.body.velocity.x = 100;
             this.player.animations.play('run');
         }

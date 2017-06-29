@@ -2,13 +2,21 @@ var playState = {
 
             
     create: function() {
-        
-        // A simple background for our game
-        // game.add.sprite(0, 0, 'sky');
 
+        // Here we create the ground.
+        this.ground = game.add.sprite(0, game.world.height - 64, 'ground2');
+        game.physics.enable(this.ground, Phaser.Physics.ARCADE);
+        
+        // A Parallax background for our game
+        this.back7 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back7').height, this.game.width, this.game.cache.getImage('back7').height,'back7');
+        this.back6 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back6').height, this.game.width, this.game.cache.getImage('back6').height,'back6');
+        this.back5 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back5').height, this.game.width, this.game.cache.getImage('back5').height,'back5');
+        this.back4 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back4').height, this.game.width, this.game.cache.getImage('back4').height,'back4');
+        this.back3 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back3').height, this.game.width, this.game.cache.getImage('back3').height,'back3');
+        this.back2 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back2').height, this.game.width, this.game.cache.getImage('back2').height,'back2');
+                
         // Our controls.
         cursors = game.input.keyboard.createCursorKeys();
-        this.jump = 0;
         this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.bKey = game.input.keyboard.addKey(Phaser.Keyboard.B);
 
@@ -19,9 +27,7 @@ var playState = {
         
         //game.time.events.loop(Phaser.Timer.SECOND, decrementScore, this);
         
-        // Here we create the ground.
-        this.ground = game.add.sprite(0, game.world.height - 64, 'ground2');
-        game.physics.enable(this.ground, Phaser.Physics.ARCADE);
+
         
         // Scale it to fit the width of the game (the original sprite is 400x32 in size)
         this.ground.scale.setTo(2, 2);
@@ -38,14 +44,17 @@ var playState = {
         // Player physics properties. Give KALE a slight bounce.
         this.player.body.bounce.y = 0.2;
         this.player.body.gravity.y = 125;
-       
+
+        // create foreground last
+        this.back1 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back1').height, this.game.width, this.game.cache.getImage('back1').height,'back1');
+        
         // create the goal sprite and enable physics
         this.goal = game.add.sprite(820, 256, 'goal');
         game.physics.enable(this.goal, Phaser.Physics.ARCADE);
         
         // Our animations, run(true = looped), jump and idle are runOnce (false).
         this.player.animations.add('jump2', Phaser.Animation.generateFrameNames('green_jump_', 1, 4), 5, false); 
-        this.player.animations.add('jump', ['green_jump_1', 'green_jump_2', 'green_jump_3', 'green_jump_4', 'green_jump_4', 'green_jump_3'], 5, false);           
+        this.player.animations.add('jump', ['green_jump_1', 'green_jump_2', 'green_jump_3', 'green_jump_3', 'green_jump_4', 'green_jump_4', 'green_jump_4', 'green_jump_4', 'green_jump_3'], 5, false);           
         this.player.animations.add('run', Phaser.Animation.generateFrameNames('green_run_', 1, 6), 10, true);
         this.player.animations.add('idle', Phaser.Animation.generateFrameNames('green_idle_', 1, 3), 10, false);
         
@@ -62,17 +71,18 @@ var playState = {
         // Collide the player and the tanks with the platforms
         game.physics.arcade.collide(this.player, this.ground);
         
+        // move background by inverse 1/100 of velocity
+        this.scrollBackground();
 
         // check controls for jumping or moving left or right
-        if (this.jump>0)
+        if (!this.player.body.touching.down)
         {
-            this.jump--;           
+            // delay for flight time           
         }
         else if (this.spaceKey.isDown) 
         {
             //	start a jump
-            this.jump = 80;
-            this.player.body.velocity.y = -100;
+            this.player.body.velocity.y = -200;
             this.player.animations.play('jump');
         }
         else if (cursors.left.isDown)
@@ -102,6 +112,17 @@ var playState = {
             this.player.body.velocity.x = 0;
         }
 
+    },
+    
+        // function to give life to menu screen
+    scrollBackground: function() {
+            this.back7.tilePosition.x -= .05/100 * this.player.body.velocity.x;
+            this.back6.tilePosition.x -= .1/100 * this.player.body.velocity.x;
+            this.back5.tilePosition.x -= .3/100 * this.player.body.velocity.x;
+            this.back4.tilePosition.x -= .75/100 * this.player.body.velocity.x;
+            this.back3.tilePosition.x -= 1/100 * this.player.body.velocity.x;
+            this.back2.tilePosition.x -= 2/100 * this.player.body.velocity.x;
+            this.back1.tilePosition.x -= 4/100 * this.player.body.velocity.x;    
     },
     
     win: function() {
