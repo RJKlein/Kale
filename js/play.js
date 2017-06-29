@@ -39,7 +39,7 @@ var playState = {
         this.ground.body.immovable = true;
        
         // create the player sprite and enable physics
-        this.player = game.add.sprite(16, 316, 'player');
+        this.player = game.add.sprite(16, -220, 'player');
         game.physics.enable(this.player, Phaser.Physics.ARCADE);
         // Player physics properties. Give KALE a slight bounce.
         this.player.body.bounce.y = 0.2;
@@ -54,7 +54,7 @@ var playState = {
         
         // Our animations, run(true = looped), jump and idle are runOnce (false).
         this.player.animations.add('jump2', Phaser.Animation.generateFrameNames('green_jump_', 1, 4), 5, false); 
-        this.player.animations.add('jump', ['green_jump_1', 'green_jump_2', 'green_jump_3', 'green_jump_3', 'green_jump_4', 'green_jump_4', 'green_jump_4', 'green_jump_4', 'green_jump_3'], 5, false);           
+        this.player.animations.add('jump', ['green_jump_1', 'green_jump_2', 'green_jump_3', 'green_jump_3', 'green_jump_4', 'green_jump_4', 'green_jump_4', 'green_jump_3'], 5, false);           
         this.player.animations.add('run', Phaser.Animation.generateFrameNames('green_run_', 1, 6), 10, true);
         this.player.animations.add('idle', Phaser.Animation.generateFrameNames('green_idle_', 1, 3), 10, false);
         
@@ -116,13 +116,13 @@ var playState = {
     
         // function to give life to menu screen
     scrollBackground: function() {
-            this.back7.tilePosition.x -= .05/100 * this.player.body.velocity.x;
-            this.back6.tilePosition.x -= .1/100 * this.player.body.velocity.x;
-            this.back5.tilePosition.x -= .3/100 * this.player.body.velocity.x;
-            this.back4.tilePosition.x -= .75/100 * this.player.body.velocity.x;
-            this.back3.tilePosition.x -= 1/100 * this.player.body.velocity.x;
-            this.back2.tilePosition.x -= 2/100 * this.player.body.velocity.x;
-            this.back1.tilePosition.x -= 4/100 * this.player.body.velocity.x;    
+            this.back7.tilePosition.x -= .1/100 * this.player.body.velocity.x;
+            this.back6.tilePosition.x -= .3/100 * this.player.body.velocity.x;
+            this.back5.tilePosition.x -= .75/100 * this.player.body.velocity.x;
+            this.back4.tilePosition.x -= 1/100 * this.player.body.velocity.x;
+            this.back3.tilePosition.x -= 1.5/100 * this.player.body.velocity.x;
+            this.back2.tilePosition.x -= 2.5/100 * this.player.body.velocity.x;
+            this.back1.tilePosition.x -= 8/100 * this.player.body.velocity.x;    
     },
     
     win: function() {
