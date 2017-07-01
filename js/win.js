@@ -4,7 +4,7 @@ var winState = {
         //	A simple background for our menu
         game.add.sprite(0, 0, 'gameover');
         
-        // place restrt instructions on menu screen
+        // place restart instructions on menu screen
         var startLabel = game.add.text(300, game.world.height-60, 'press CLICK for MENU', { font: '25px Arial', fill: '#ffffff' });
 
 		//	the "click to restart" handler

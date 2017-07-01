@@ -8,6 +8,8 @@ var loadState= {
 
         // load assets
         game.load.image('goal', 'assets/goal.png');
+        game.load.image('beam', 'assets/beam.png');
+        game.load.image('nerf', 'assets/nerf.png');
         game.load.image('back1', 'assets/layer_01_1920 x 1080.png');
         game.load.image('back2', 'assets/layer_02_1920 x 1080.png');
         game.load.image('back3', 'assets/layer_03_1920 x 1080.png');

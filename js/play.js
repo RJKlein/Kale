@@ -14,6 +14,7 @@ var playState = {
         this.back4 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back4').height, this.game.width, this.game.cache.getImage('back4').height,'back4');
         this.back3 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back3').height, this.game.width, this.game.cache.getImage('back3').height,'back3');
         this.back2 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back2').height, this.game.width, this.game.cache.getImage('back2').height,'back2');
+        this.beam = this.game.add.sprite(0, 0, 'beam');
                 
         // Our controls.
         cursors = game.input.keyboard.createCursorKeys();
@@ -53,7 +54,6 @@ var playState = {
         game.physics.enable(this.goal, Phaser.Physics.ARCADE);
         
         // Our animations, run(true = looped), jump and idle are runOnce (false).
-        this.player.animations.add('jump2', Phaser.Animation.generateFrameNames('green_jump_', 1, 4), 5, false); 
         this.player.animations.add('jump', ['green_jump_1', 'green_jump_2', 'green_jump_3', 'green_jump_3', 'green_jump_4', 'green_jump_4', 'green_jump_4', 'green_jump_3'], 5, false);           
         this.player.animations.add('run', Phaser.Animation.generateFrameNames('green_run_', 1, 6), 10, true);
         this.player.animations.add('idle', Phaser.Animation.generateFrameNames('green_idle_', 1, 3), 10, false);
@@ -61,6 +61,11 @@ var playState = {
         // set the axis to the center of the image
         this.player.anchor.setTo(.5,.5);
         
+    },
+
+    render: function() {
+        game.debug.bodyInfo(this.player, 32, 32);
+        game.debug.body(this.player);
     },
     
     update: function() {
@@ -102,7 +107,7 @@ var playState = {
         else
         {
             this.player.animations.play('idle');
-            
+            this.beam.kill();
             if (!this.bKey.isDown)
             {
                 // Stand still
@@ -126,6 +131,7 @@ var playState = {
     },
     
     win: function() {
+        this.player.kill();
         game.state.start('play1');
     }
 };
