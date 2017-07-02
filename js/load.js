@@ -17,7 +17,7 @@ var loadState= {
         game.load.image('back5', 'assets/layer_05_1920 x 1080.png');
         game.load.image('back6', 'assets/layer_06_1920 x 1080.png');
         game.load.image('back7', 'assets/layer_07_1920 x 1080.png');
-        game.load.image('sky', 'assets/IMG_0027.jpg');
+        game.load.image('sky', 'assets/horsehead.jpg');
         game.load.image('planet', 'assets/planet.png');
         game.load.image('ground2', 'assets/mars.png');
         game.load.image('gameover', 'assets/gameover.jpg');
