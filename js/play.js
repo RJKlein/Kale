@@ -3,6 +3,9 @@ var playState = {
             
     create: function() {
 
+        // DEBUG VARIABLE
+        this.debugFlag = false;
+    
         // Here we create the ground.
         this.ground = game.add.sprite(0, game.world.height - 64, 'ground2');
         game.physics.enable(this.ground, Phaser.Physics.ARCADE);
@@ -20,16 +23,8 @@ var playState = {
         cursors = game.input.keyboard.createCursorKeys();
         this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.bKey = game.input.keyboard.addKey(Phaser.Keyboard.B);
+        this.bKey.onDown.add(this.flipDebug, this);        
 
-        // Here we'll create a basic looped event.
-        // A looped event is like a repeat event but with no limit, it will literally repeat itself forever, or until you stop it.
-        // The first parameter is how long to wait before the event fires. In this case 1 second (you could pass in 1000 as the value as well.)
-        // The next two parameters are the function to call ('decrementScore') and the context under which that will happen.
-        
-        //game.time.events.loop(Phaser.Timer.SECOND, decrementScore, this);
-        
-
-        
         // Scale it to fit the width of the game (the original sprite is 400x32 in size)
         this.ground.scale.setTo(2, 2);
         
@@ -64,8 +59,11 @@ var playState = {
     },
 
     render: function() {
-        game.debug.bodyInfo(this.player, 32, 32);
-        game.debug.body(this.player);
+        if (this.debugFlag)
+        {
+            game.debug.bodyInfo(this.player, 32, 32);
+            game.debug.body(this.player);
+        }
     },
     
     update: function() {
@@ -78,7 +76,7 @@ var playState = {
         
         // move background by inverse 1/100 of velocity
         this.scrollBackground();
-
+ 
         // check controls for jumping or moving left or right
         if (!this.player.body.touching.down)
         {
@@ -108,26 +106,28 @@ var playState = {
         {
             this.player.animations.play('idle');
             this.beam.kill();
-            if (!this.bKey.isDown)
-            {
-                // Stand still
-                this.player.animations.stop();
-            }
+            this.player.animations.stop();
+ 
             // Stop the player
             this.player.body.velocity.x = 0;
         }
 
     },
     
-        // function to give life to menu screen
+    // flip debug enable
+    flipDebug: function(){
+        this.debugFlag = !this.debugFlag;
+    },
+
+    // function to give life to menu screen
     scrollBackground: function() {
-            this.back7.tilePosition.x -= .1/100 * this.player.body.velocity.x;
-            this.back6.tilePosition.x -= .3/100 * this.player.body.velocity.x;
-            this.back5.tilePosition.x -= .75/100 * this.player.body.velocity.x;
-            this.back4.tilePosition.x -= 1/100 * this.player.body.velocity.x;
-            this.back3.tilePosition.x -= 1.5/100 * this.player.body.velocity.x;
-            this.back2.tilePosition.x -= 2.5/100 * this.player.body.velocity.x;
-            this.back1.tilePosition.x -= 8/100 * this.player.body.velocity.x;    
+        this.back7.tilePosition.x -= .1/100 * this.player.body.velocity.x;
+        this.back6.tilePosition.x -= .3/100 * this.player.body.velocity.x;
+        this.back5.tilePosition.x -= .75/100 * this.player.body.velocity.x;
+        this.back4.tilePosition.x -= 1/100 * this.player.body.velocity.x;
+        this.back3.tilePosition.x -= 1.5/100 * this.player.body.velocity.x;
+        this.back2.tilePosition.x -= 2.5/100 * this.player.body.velocity.x;
+        this.back1.tilePosition.x -= 8/100 * this.player.body.velocity.x;    
     },
     
     win: function() {

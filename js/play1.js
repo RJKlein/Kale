@@ -3,6 +3,9 @@ var play1State = {
             
     create: function() {
    
+        // DEBUG VARIABLE
+        this.debugFlag = false;
+
         // Our controls.
         cursors = game.input.keyboard.createCursorKeys();
         this.fire = 30;
@@ -11,13 +14,8 @@ var play1State = {
         this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
         this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
         this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
-
-        // Here we'll create a basic looped event.
-        // A looped event is like a repeat event but with no limit, it will literally repeat itself forever, or until you stop it.
-        // The first parameter is how long to wait before the event fires. In this case 1 second (you could pass in 1000 as the value as well.)
-        // The next two parameters are the function to call ('decrementScore') and the context under which that will happen.
-        
-        //game.time.events.loop(Phaser.Timer.SECOND, decrementScore, this);
+        this.bKey = game.input.keyboard.addKey(Phaser.Keyboard.B);
+        this.bKey.onDown.add(this.flipDebug, this);
         
         // Here we create the ground.
         this.ground = game.add.sprite(0, game.world.height - 64, 'ground2');
@@ -79,10 +77,13 @@ var play1State = {
     },
     
     render: function() {
-        game.debug.bodyInfo(this.player, 32, 32);
-        game.debug.bodyInfo(this.kane, 32, 232);
-        game.debug.body(this.player);
-        game.debug.body(this.kane);
+         if (this.debugFlag)
+        {
+            game.debug.bodyInfo(this.player, 32, 32);
+            game.debug.bodyInfo(this.kane, 32, 232);
+            game.debug.body(this.player);
+            game.debug.body(this.kane);
+        }
     },
     
     update: function() {
@@ -198,13 +199,19 @@ var play1State = {
             break;
         }
     },
+
+        
+    flipDebug: function(){
+        // check for debug enable
+        this.debugFlag = !this.debugFlag;
+    },
     
     playerHit: function(sprite, nerf){
-            //	start a death sequence
-            nerf.kill();
-            this.fire = 90;
-            this.kaneFire = 90;
-            sprite.body.setSize(200,200, 0, 0);
-            sprite.animations.play('dead');
-        }
+        //	start a death sequence
+        nerf.kill();
+        this.fire = 90;
+        this.kaneFire = 90;
+        sprite.body.setSize(200,200, 0, 0);
+        sprite.animations.play('dead');
+    }
 };
