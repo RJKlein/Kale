@@ -18,8 +18,8 @@ var menuState = {
         var nameLabel = game.add.text(80, 80, 'MENU', { font: '50px Arial', fill: '#ffffff' });
         
         // place menu instructions on menu screen
-        var start1Label = game.add.text(80, 160, '1) LEVEL 1&2', { font: '50px Arial', fill: '#ffffff' });
-        var start2Label = game.add.text(80, 240, '2) LEVEL 2', { font: '50px Arial', fill: '#ffffff' });
+        var start1Label = game.add.text(80, 160, '1) SINGLE PLAYER', { font: '50px Arial', fill: '#ffffff' });
+        var start2Label = game.add.text(80, 240, '2) MULTIPLAYER', { font: '50px Arial', fill: '#ffffff' });
         var startLabel = game.add.text(80, 520, 'Press number key for level to start', { font: '25px Arial', fill: '#ffffff' });
         
 		//	the keyboard numeric handler
