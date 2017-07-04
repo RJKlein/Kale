@@ -1,5 +1,6 @@
 // create phaser game 800x600 pixels set third parameter to match the div element defined in index.html
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'gameDiv' );
+var game.debugFlag = false;
 
 // Add each state 
 game.state.add('boot', bootState);

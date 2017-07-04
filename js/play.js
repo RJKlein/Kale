@@ -4,13 +4,31 @@ var playState = {
     create: function() {
 
         // DEBUG VARIABLE
-        this.debugFlag = false;
-    
+        this.delay = 60;
         // Here we create the ground.
         this.ground = game.add.sprite(0, game.world.height - 64, 'ground2');
         game.physics.enable(this.ground, Phaser.Physics.ARCADE);
+
+        // Scale it to fit the width of the game (the original sprite is 400x32 in size)
+        this.ground.scale.setTo(2, 2);
         
-        // A Parallax background for our game
+        // This enable physics on the ground
+        this.ground.enableBody = true;
+        
+        // This stops it from falling away when you jump on it
+        this.ground.body.immovable = true;
+
+        this.wall = game.add.sprite(-110, 64, 'ground2');
+        game.physics.enable(this.wall, Phaser.Physics.ARCADE);
+        this.wall.body.setSize(10, 400, 0, 0);
+        
+        // This enable physics on the ground
+        this.wall.enableBody = true;
+        
+        // This stops it from falling away when you jump on it
+        this.wall.body.immovable = true;
+        
+        // A Parallax background for our game each panel is a single tile the size of the game height & width and will wrap 
         this.back7 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back7').height, this.game.width, this.game.cache.getImage('back7').height,'back7');
         this.back6 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back6').height, this.game.width, this.game.cache.getImage('back6').height,'back6');
         this.back5 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back5').height, this.game.width, this.game.cache.getImage('back5').height,'back5');
@@ -25,18 +43,10 @@ var playState = {
         this.bKey = game.input.keyboard.addKey(Phaser.Keyboard.B);
         this.bKey.onDown.add(this.flipDebug, this);        
 
-        // Scale it to fit the width of the game (the original sprite is 400x32 in size)
-        this.ground.scale.setTo(2, 2);
-        
-        // This enable physics on the ground
-        this.ground.enableBody = true;
-        
-        // This stops it from falling away when you jump on it
-        this.ground.body.immovable = true;
-       
         // create the player sprite and enable physics
         this.player = game.add.sprite(16, -220, 'player');
         game.physics.enable(this.player, Phaser.Physics.ARCADE);
+
         // Player physics properties. Give KALE a slight bounce.
         this.player.body.bounce.y = 0.2;
         this.player.body.gravity.y = 125;
@@ -51,18 +61,23 @@ var playState = {
         // Our animations, run(true = looped), jump and idle are runOnce (false).
         this.player.animations.add('jump', ['green_jump_1', 'green_jump_2', 'green_jump_3', 'green_jump_3', 'green_jump_4', 'green_jump_4', 'green_jump_4', 'green_jump_3'], 5, false);           
         this.player.animations.add('run', Phaser.Animation.generateFrameNames('green_run_', 1, 6), 10, true);
+        this.player.animations.add('dead', Phaser.Animation.generateFrameNames('green_dead_', 1, 5), 5, false);
         this.player.animations.add('idle', Phaser.Animation.generateFrameNames('green_idle_', 1, 3), 10, false);
         
         // set the axis to the center of the image
+        // sprite.body.moves = false
         this.player.anchor.setTo(.5,.5);
-        
+        this.createNerf();
+        this.playerNerf.kill();
     },
 
     render: function() {
-        if (this.debugFlag)
+        if (game.debugFlag)
         {
             game.debug.bodyInfo(this.player, 32, 32);
             game.debug.body(this.player);
+            game.debug.bodyInfo(this.playerNerf, 32, 232);
+            game.debug.body(this.playerNerf);
         }
     },
     
@@ -72,15 +87,24 @@ var playState = {
         game.physics.arcade.overlap(this.player, this.goal, this.win, null, this);
 
         // Collide the player and the tanks with the platforms
-        game.physics.arcade.collide(this.player, this.ground);
+        game.physics.arcade.collide(this.player, this.ground, this.collisionCallback);
+        game.physics.arcade.collide(this.player, this.wall);
+        
+        // Checks to see if the nerf darts collide with any of the players, if it does call the proper hit function
+        game.physics.arcade.collide(this.player, this.playerNerf, this.playerHit, null, this);
         
         // move background by inverse 1/100 of velocity
         this.scrollBackground();
- 
-        // check controls for jumping or moving left or right
-        if (!this.player.body.touching.down)
+
+        if (!this.playerNerf.alive && !this.beam.alive && (Math.random() * 1000) > 995)
         {
-            // delay for flight time           
+            this.createNerf();
+        };
+        
+        // check controls for jumping or moving left or right
+        if (this.delay > 0 || !this.player.body.touching.down)
+        {
+            this.delay--;            
         }
         else if (this.spaceKey.isDown) 
         {
@@ -105,7 +129,6 @@ var playState = {
         else
         {
             this.player.animations.play('idle');
-            this.beam.kill();
             this.player.animations.stop();
  
             // Stop the player
@@ -116,10 +139,14 @@ var playState = {
     
     // flip debug enable
     flipDebug: function(){
-        this.debugFlag = !this.debugFlag;
+        game.debugFlag = !game.debugFlag;
+    },
+    
+    collisionCallback: function(spite1, sprite2){
+        playState.beam.kill();
     },
 
-    // function to give life to menu screen
+    // function to scroll background based on character movement and layer depth
     scrollBackground: function() {
         this.back7.tilePosition.x -= .1/100 * this.player.body.velocity.x;
         this.back6.tilePosition.x -= .3/100 * this.player.body.velocity.x;
@@ -128,6 +155,25 @@ var playState = {
         this.back3.tilePosition.x -= 1.5/100 * this.player.body.velocity.x;
         this.back2.tilePosition.x -= 2.5/100 * this.player.body.velocity.x;
         this.back1.tilePosition.x -= 8/100 * this.player.body.velocity.x;    
+    },
+    
+    createNerf: function() {
+        this.playerNerf = game.add.sprite(790, 440, 'nerf');
+        this.playerNerf.scale.setTo(-2,2);
+        game.physics.enable(this.playerNerf, Phaser.Physics.ARCADE);
+        this.playerNerf.body.setSize(45, 23, -90, 0);
+        this.playerNerf.checkWorldBounds = true;
+        this.playerNerf.outOfBoundsKill = true;
+        this.playerNerf.body.velocity.x = -250;
+    },
+
+    playerHit: function(sprite, nerf){
+        //	start a death sequence
+        nerf.kill();
+        playState.delay = 60;
+        this.player.animations.play('dead');
+        this.player.body.velocity.y = -200;
+        this.beam = this.game.add.sprite(0, 0, 'beam');
     },
     
     win: function() {

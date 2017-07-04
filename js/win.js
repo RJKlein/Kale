@@ -5,10 +5,11 @@ var winState = {
         game.add.sprite(0, 0, 'gameover');
         
         // place restart instructions on menu screen
-        var startLabel = game.add.text(300, game.world.height-60, 'press CLICK for MENU', { font: '25px Arial', fill: '#ffffff' });
+        var startLabel = game.add.text(300, game.world.height-60, 'press SpaceBar for MENU', { font: '25px Arial', fill: '#ffffff' });
 
-		//	the "click to restart" handler
-		game.input.onTap.addOnce(this.restart,this); 
+		//	the "space to restart" handler
+        this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        this.spaceKey.onDown.addOnce(this.restart,this); 
     },
     
     // start function calls the paly state

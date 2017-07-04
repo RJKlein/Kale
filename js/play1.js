@@ -3,19 +3,16 @@ var play1State = {
             
     create: function() {
    
-        // DEBUG VARIABLE
-        this.debugFlag = false;
-
         // Our controls.
         cursors = game.input.keyboard.createCursorKeys();
         this.fire = 30;
-        this.kaneFire = 0;
+        this.kaneFire = 30;
         this.wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
         this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
         this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
         this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
         this.bKey = game.input.keyboard.addKey(Phaser.Keyboard.B);
-        this.bKey.onDown.add(this.flipDebug, this);
+        this.bKey.onDown.add(playState.flipDebug, this);
         
         // Here we create the ground.
         this.ground = game.add.sprite(0, game.world.height - 64, 'ground2');
@@ -32,7 +29,8 @@ var play1State = {
 
         // A simple background for our game on top of our platform
         game.add.sprite(0, 0, 'planet');
-        
+        this.portal = game.add.sprite(-100,320 , 'goal');
+            
         // create the player sprite and enable physics
         this.player = game.add.sprite(80, 300, 'player');
         game.physics.enable(this.player, Phaser.Physics.ARCADE);
@@ -65,24 +63,37 @@ var play1State = {
         this.kane.animations.add('dead', Phaser.Animation.generateFrameNames('kane_dead_', 1, 5), 5, false);
         this.kane.animations.add('idle', Phaser.Animation.generateFrameNames('kane_idle_', 1, 3), 10, false);
                 
+        // set the body boxes for both characters identical and bound the general sprite (width, height, offset.x, offset.y)
+        this.player.body.setSize(119*2, 197.5*2, 0, 17);
+        this.kane.body.setSize(119*2, 197.5*2, -126, 0);
+        
         // set the axis to the size of both players to half
-        this.kane.body.setSize(119*2, 197.5*2, -119, 0);
         this.player.scale.setTo(.5,.5);
         this.kane.scale.setTo(-.5,.5);
         
         this.player.events.onAnimationComplete.add(this.playerStopped, this);
         this.kane.events.onAnimationComplete.add(this.playerStopped, this);
 
-      
+        // create the nerf darts
+        this.playerNerf = game.add.sprite(280, 425, 'nerf');
+        this.nerfInit(this.playerNerf);
+
+        this.kaneNerf = game.add.sprite(480, 425, 'nerf');
+        this.nerfInit(this.kaneNerf);
+        
     },
     
     render: function() {
-         if (this.debugFlag)
+         if (game.debugFlag)
         {
-            game.debug.bodyInfo(this.player, 32, 32);
-            game.debug.bodyInfo(this.kane, 32, 232);
+            game.debug.bodyInfo(this.player, 32, 6);
+            game.debug.bodyInfo(this.kane, 32, 102);
+            game.debug.bodyInfo(this.playerNerf, 32, 198);
+            game.debug.bodyInfo(this.kaneNerf, 32, 294);
             game.debug.body(this.player);
             game.debug.body(this.kane);
+            game.debug.body(this.playerNerf);
+            game.debug.body(this.kaneNerf);
         }
     },
     
@@ -101,21 +112,21 @@ var play1State = {
         {
             this.fire--;           
         }
-        else if (this.aKey.isDown) 
+        else if (this.aKey.isDown && !this.playerNerf.alive) 
         {
-            //	start a fire
-            this.fire = 60;
+            // start a attack
+            this.fire = 40;
             this.player.animations.play('attack');
         }
-        else if (this.dKey.isDown)
+        else if (this.dKey.isDown && !this.playerNerf.alive)
         {
-            //	start a fire
+            // start a fire
             this.fire = 60;
             this.player.animations.play('fire');
         }
         else if (this.wKey.isDown) 
         {
-            //	start a jump
+            // start a jump
             this.player.body.velocity.y = -200;
             this.player.animations.play('jump');
         }
@@ -124,7 +135,7 @@ var play1State = {
             // return players to idle    
             this.player.animations.play('idle');
             this.player.animations.stop();
- 
+            this.portal.kill();   
             // Stop the players
             this.player.body.velocity.x = 0;
         }
@@ -134,21 +145,21 @@ var play1State = {
         {
             this.kaneFire--;           
         }
-        else if (cursors.left.isDown)
+        else if (cursors.left.isDown && !this.kaneNerf.alive)
         {
-            //	start a fire
+            // start a fire
             this.kaneFire = 60;
             this.kane.animations.play('fire');
         }
-        else if (cursors.right.isDown)
+        else if (cursors.right.isDown && !this.kaneNerf.alive)
         {
-            //	start a fire
-            this.kaneFire = 60;
+            // start a fire
+            this.kaneFire = 40;
             this.kane.animations.play('attack');
         }
         else if (cursors.up.isDown) 
         {
-            //	start a jump
+            // start a jump
             this.kane.body.velocity.y = -200;
             this.kane.animations.play('jump');
         }
@@ -157,39 +168,28 @@ var play1State = {
             // return players to idle    
             this.kane.animations.play('idle');
             this.kane.animations.stop();
-  
+
             // Stop the players
             this.kane.body.velocity.x = 0;
         }
-
     },
 
     playerStopped: function(sprite, animation) {
-    game.add.text(sprite.x / 2 , 100, sprite.key + ' ' + animation.name + ' stopped', { fill: 'white' });
+
     // case statement based on which character (sprite.key) and what animation was completed (animation.name)
     switch(sprite.key + animation.name) {
         case 'playerfire':
         
             this.fire = 0;
-        
-            this.playerNerf = game.add.sprite(280, 425, 'nerf');
-            game.physics.enable(this.playerNerf, Phaser.Physics.ARCADE);
-            this.playerNerf.checkWorldBounds = true;
-            this.playerNerf.outOfBoundsKill = true;
-            this.playerNerf.scale.setTo(1,1);
-            this.playerNerf.body.velocity.x = 250;
+            this.playerFire(sprite, this.playerNerf)
+
             break;
         
         case 'kanefire':
         
             this.kaneFire = 0;
+            this.playerFire(sprite, this.kaneNerf)
         
-            this.kaneNerf = game.add.sprite(480, 430, 'nerf');
-            game.physics.enable(this.kaneNerf, Phaser.Physics.ARCADE);
-            this.kaneNerf.checkWorldBounds = true;
-            this.kaneNerf.outOfBoundsKill = true;
-            this.kaneNerf.scale.setTo(-1,1);
-            this.kaneNerf.body.velocity.x = -250;
             break;
         
         case 'playerdead':
@@ -199,13 +199,24 @@ var play1State = {
             break;
         }
     },
-
-        
-    flipDebug: function(){
-        // check for debug enable
-        this.debugFlag = !this.debugFlag;
+         
+    nerfInit: function(nerf) {
+         // create the nerf darts
+        game.physics.enable(nerf, Phaser.Physics.ARCADE);
+        nerf.body.setSize(45, 23, 0, 0);
+        nerf.checkWorldBounds = true;
+        nerf.outOfBoundsKill = true;
+        nerf.kill();
     },
-    
+
+    playerFire: function(sprite, nerf){
+            // draw the nerfDart and box based on sprite orientation, position
+            nerf.reset(sprite.body.position.x + Math.sign(sprite.scale.x) * (105 + Math.sign(sprite.scale.x) * 60), sprite.body.position.y + 92);
+            nerf.scale.setTo(Math.sign(sprite.scale.x),1);
+            nerf.body.velocity.x = Math.sign(sprite.scale.x) * 250;
+            nerf.body.setSize(45, 23, - 22 + Math.sign(sprite.scale.x) * 22, 0);
+    },
+            
     playerHit: function(sprite, nerf){
         //	start a death sequence
         nerf.kill();
