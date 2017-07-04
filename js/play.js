@@ -57,12 +57,9 @@ var playState = {
         // create the goal sprite and enable physics
         this.goal = game.add.sprite(820, 256, 'goal');
         game.physics.enable(this.goal, Phaser.Physics.ARCADE);
-        
-        // Our animations, run(true = looped), jump and idle are runOnce (false).
-        this.player.animations.add('jump', ['green_jump_1', 'green_jump_2', 'green_jump_3', 'green_jump_3', 'green_jump_4', 'green_jump_4', 'green_jump_4', 'green_jump_3'], 5, false);           
-        this.player.animations.add('run', Phaser.Animation.generateFrameNames('green_run_', 1, 6), 10, true);
-        this.player.animations.add('dead', Phaser.Animation.generateFrameNames('green_dead_', 1, 5), 5, false);
-        this.player.animations.add('idle', Phaser.Animation.generateFrameNames('green_idle_', 1, 3), 10, false);
+ 
+        // load all of the current player animations
+        this.loadAnimations(this.player, 'green');
         
         // set the axis to the center of the image
         // sprite.body.moves = false
@@ -155,6 +152,16 @@ var playState = {
         this.back3.tilePosition.x -= 1.5/100 * this.player.body.velocity.x;
         this.back2.tilePosition.x -= 2.5/100 * this.player.body.velocity.x;
         this.back1.tilePosition.x -= 8/100 * this.player.body.velocity.x;    
+    },
+
+    // Our animations, all are runOnce (false).
+    loadAnimations: function(sprite, fileName) {
+        sprite.animations.add('fire', Phaser.Animation.generateFrameNames(fileName + '_fire_', 1, 8), 15, false); 
+        sprite.animations.add('attack', Phaser.Animation.generateFrameNames(fileName + '_attack_', 1, 4), 12, false); 
+        sprite.animations.add('jump', [fileName + '_jump_1', fileName + '_jump_2', fileName + '_jump_3', fileName + '_jump_3', fileName + '_jump_4', fileName + '_jump_4', fileName + '_jump_4', fileName + '_jump_3'], 5, false);           
+        sprite.animations.add('run', Phaser.Animation.generateFrameNames(fileName + '_run_', 1, 6), 10, true);
+        sprite.animations.add('dead', Phaser.Animation.generateFrameNames(fileName + '_dead_', 1, 5), 5, false);
+        sprite.animations.add('idle', Phaser.Animation.generateFrameNames(fileName + '_idle_', 1, 3), 10, false);
     },
     
     createNerf: function() {

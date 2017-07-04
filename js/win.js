@@ -12,7 +12,7 @@ var winState = {
         this.spaceKey.onDown.addOnce(this.restart,this); 
     },
     
-    // start function calls the paly state
+    // start function calls the play state
     restart: function() {
         game.state.start('menu');
     }

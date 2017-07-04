@@ -10,10 +10,9 @@ var menuState = {
         this.player.anchor.setTo(.5, .5);
         this.player.angle = 38;
         
-        // add the blinking animation as a play only once (last paarameter is set to flase for OTP)
+        // add the blinking animation as a play only once (last paarameter is set to false for play once)
         this.player.animations.add('idle', ['green_idle_1', 'green_idle_2', 'green_idle_3', 'green_idle_2', 'green_idle_1'], 10, false);
         this.player.animations.play('idle');
-
    
         // place game title on menu screen
         var nameLabel = game.add.text(80, 80, 'MENU', { font: '50px Arial', fill: '#ffffff' });
@@ -30,8 +29,7 @@ var menuState = {
         twoKey.onDown.addOnce(this.start,this);
 
         //	Timer event to give motion and activity every 1/4 second to Kane for Main menu
-        game.time.events.loop(Phaser.Timer.SECOND/4, this.actionTime, this);
-        
+        game.time.events.loop(Phaser.Timer.SECOND/4, this.actionTime, this);       
     },
     
     // start function calls the play state based on the key that was pressed

@@ -48,21 +48,10 @@ var play1State = {
         this.kane.body.bounce.y = 0.2;
         this.kane.body.gravity.y = 125;
        
-        
-        // Our animations, all are runOnce (false).
-        this.player.animations.add('fire', Phaser.Animation.generateFrameNames('green_fire_', 1, 8), 15, false); 
-        this.player.animations.add('attack', Phaser.Animation.generateFrameNames('green_attack_', 1, 4), 12, false); 
-        this.player.animations.add('jump', ['green_jump_1', 'green_jump_2', 'green_jump_3', 'green_jump_3', 'green_jump_4', 'green_jump_4', 'green_jump_4', 'green_jump_3'], 5, false);           
-        this.player.animations.add('dead', Phaser.Animation.generateFrameNames('green_dead_', 1, 5), 5, false);
-        this.player.animations.add('idle', Phaser.Animation.generateFrameNames('green_idle_', 1, 3), 10, false);
-        
-        // Kane's animations, all are runOnce (false).
-        this.kane.animations.add('fire', Phaser.Animation.generateFrameNames('kane_fire_', 1, 8), 12, false); 
-        this.kane.animations.add('attack', Phaser.Animation.generateFrameNames('kane_attack_', 1, 4), 12, false); 
-        this.kane.animations.add('jump', ['kane_jump_1', 'kane_jump_2', 'kane_jump_3', 'kane_jump_3', 'kane_jump_4', 'kane_jump_4', 'kane_jump_4', 'kane_jump_3'], 5, false);           
-        this.kane.animations.add('dead', Phaser.Animation.generateFrameNames('kane_dead_', 1, 5), 5, false);
-        this.kane.animations.add('idle', Phaser.Animation.generateFrameNames('kane_idle_', 1, 3), 10, false);
-                
+        // load all of the current player animations
+        playState.loadAnimations(this.player, 'green');
+        playState.loadAnimations(this.kane, 'kane');
+                      
         // set the body boxes for both characters identical and bound the general sprite (width, height, offset.x, offset.y)
         this.player.body.setSize(119*2, 197.5*2, 0, 17);
         this.kane.body.setSize(119*2, 197.5*2, -126, 0);
