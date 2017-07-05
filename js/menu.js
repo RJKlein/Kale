@@ -15,12 +15,12 @@ var menuState = {
         this.player.animations.play('idle');
    
         // place game title on menu screen
-        var nameLabel = game.add.text(80, 80, 'MENU', { font: '50px Arial', fill: '#ffffff' });
+        var nameLabel = game.add.text(40, 80, 'ADVENTURES OF KALE', { font: '50px Comic Sans MS', fill: '#ffffff' });
         
         // place menu instructions on menu screen
-        var start1Label = game.add.text(80, 160, '1) SINGLE PLAYER', { font: '50px Arial', fill: '#ffffff' });
-        var start2Label = game.add.text(80, 240, '2) MULTIPLAYER', { font: '50px Arial', fill: '#ffffff' });
-        var startLabel = game.add.text(80, 520, 'Press number key for level to start', { font: '25px Arial', fill: '#ffffff' });
+        var start1Label = game.add.text(80, 160, 'SINGLE PLAYER', { font: '40px Comic Sans MS', fill: '#ffffff' });
+        var start2Label = game.add.text(80, 240, 'MULTIPLAYER', { font: '40px Comic Sans MS', fill: '#ffffff' });
+        var startLabel = game.add.text(80, 520, 'Select number of players to start', { font: '25px Comic Sans MS', fill: '#ffffff' });
         
 		//	the keyboard numeric handler
 		var oneKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
