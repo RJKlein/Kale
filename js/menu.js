@@ -10,7 +10,7 @@ var menuState = {
         this.player.anchor.setTo(.5, .5);
         this.player.angle = 38;
         
-        // add the blinking animation as a play only once (last paarameter is set to false for play once)
+        // add the blinking animation as a play only once (last parameter is set to false for play once)
         this.player.animations.add('idle', ['green_idle_1', 'green_idle_2', 'green_idle_3', 'green_idle_2', 'green_idle_1'], 10, false);
         this.player.animations.play('idle');
    
