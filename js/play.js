@@ -62,7 +62,6 @@ var playState = {
         this.loadAnimations(this.player, 'green');
         
         // set the axis to the center of the image
-        // sprite.body.moves = false
         this.player.anchor.setTo(.5,.5);
         this.createNerf();
         this.playerNerf.kill();
