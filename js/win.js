@@ -6,6 +6,8 @@ var winState = {
         
         // place restart instructions on menu screen
         var startLabel = game.add.text(300, game.world.height-60, 'press SpaceBar for MENU', { font: '25px Arial', fill: '#ffffff' });
+        this.gameoversound = game.add.audio('gameoversound');
+        this.gameoversound.play();    
 
 		//	the "space to restart" handler
         this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
