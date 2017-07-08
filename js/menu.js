@@ -3,7 +3,7 @@ var menuState = {
         
         //	A simple background for our menu
         game.add.sprite(0, 0, 'sky');
-
+        this.blink = game.add.audio('blink')
         // create the player sprite and enable physics
         this.player = game.add.sprite(550, 256, 'player');
         this.player.scale.setTo(-1, 1);
@@ -13,6 +13,10 @@ var menuState = {
         // add the blinking animation as a play only once (last parameter is set to false for play once)
         this.player.animations.add('idle', ['green_idle_1', 'green_idle_2', 'green_idle_3', 'green_idle_2', 'green_idle_1'], 10, false);
         this.player.animations.play('idle');
+        
+        //  Enables all kind of input actions on this image (click, etc)
+        this.player.inputEnabled = true;
+        this.player.events.onInputDown.add(this.listener, this);
    
         // place game title on menu screen
         var nameLabel = game.add.text(40, 80, 'ADVENTURES OF KALE', { font: '50px Comic Sans MS', fill: '#ffffff' });
@@ -30,8 +34,17 @@ var menuState = {
 
         //	Timer event to give motion and activity every 1/4 second to Kane for Main menu
         game.time.events.loop(Phaser.Timer.SECOND/4, this.actionTime, this);       
+        
+        },
+
+    listener: function() {
+        if (!this.blink.isPlaying) {       
+            this.player.animations.play('idle');
+            this.blink.play();
+        }
     },
-    
+
+        
     // start function calls the play state based on the key that was pressed
     start: function(item) {
         switch(item.event.code) {
@@ -53,9 +66,10 @@ var menuState = {
         this.player.angle += ((Math.random() * 2) - 1);
         
         // 5% of the events should cause Kane to blink(play 1 full reel of the idle animation)
-        if ((Math.random() * 100) > 95)
+        if (!this.blink.isPlaying && (Math.random() * 100) > 95)
         {       
         this.player.animations.play('idle');
+        this.blink.play();
         }
     }
 };

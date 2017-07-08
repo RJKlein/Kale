@@ -3,7 +3,17 @@ var playState = {
             
     create: function() {
 
-        // DEBUG VARIABLE
+        // add audio first
+        this.blaster = game.add.audio('blaster')
+        this.bass = game.add.audio('bass');
+        this.drums = game.add.audio('drums');
+        this.synth1 = game.add.audio('synth1');
+        this.beamSound = game.add.audio('beamsound');
+        this.jumpSound = game.add.audio('jumpsound');
+        this.ohnoSound = game.add.audio('ohnosound');
+        this.bass.loop = true;
+        
+        // delay timer
         this.delay = 60;
         // Here we create the ground.
         this.ground = game.add.sprite(0, game.world.height - 64, 'ground2');
@@ -65,7 +75,13 @@ var playState = {
         this.player.anchor.setTo(.5,.5);
         this.createNerf();
         this.playerNerf.kill();
-    },
+    
+        
+        this.beamSound.play();   
+        this.bass.onLoop.add(this.playMusic, this);
+        this.beamSound.onStop.add(this.playMusic, this);
+        this.ohnoSound.onStop.add(this.playBeam, this);
+},
 
     render: function() {
         if (game.debugFlag)
@@ -92,8 +108,9 @@ var playState = {
         // move background by inverse 1/100 of velocity
         this.scrollBackground();
 
-        if (!this.playerNerf.alive && !this.beam.alive && (Math.random() * 1000) > 995)
+        if (!this.playerNerf.alive && !this.beam.alive && !this.ohnoSound.isPlaying && (Math.random() * 1000) > 995)
         {
+            this.blaster.play();
             this.createNerf();
         };
         
@@ -107,6 +124,7 @@ var playState = {
             //	start a jump
             this.player.body.velocity.y = -200;
             this.player.animations.play('jump');
+            this.jumpSound.play();
         }
         else if (cursors.left.isDown)
         {
@@ -126,7 +144,7 @@ var playState = {
         {
             this.player.animations.play('idle');
             this.player.animations.stop();
- 
+            
             // Stop the player
             this.player.body.velocity.x = 0;
         }
@@ -137,9 +155,28 @@ var playState = {
     flipDebug: function(){
         game.debugFlag = !game.debugFlag;
     },
+
+    playBeam: function() {
+        // cleanup audio incase loop and stop occur too close together
+        this.beamSound.play();
+        this.beam = this.game.add.sprite(0, 0, 'beam');
+    },
     
-    collisionCallback: function(spite1, sprite2){
+    playMusic: function() {
+        // cleanup audio incase loop and stop occur too close together
+        this.bass.stop();
+        this.drums.stop();
+        this.synth1.stop();
+        this.bass.play();
+        this.drums.play();
+        this.synth1.play();
+    },
+    
+    collisionCallback: function(sprite1, sprite2){
         playState.beam.kill();
+        if (playState.beamSound.isPlaying){
+            playState.beamSound.stop();
+        }
     },
 
     // function to scroll background based on character movement and layer depth
@@ -175,15 +212,23 @@ var playState = {
 
     playerHit: function(sprite, nerf){
         //	start a death sequence
-        nerf.kill();
         playState.delay = 60;
+        this.bass.stop();
+        this.drums.stop();
+        this.synth1.stop();
+        this.ohnoSound.play();
+        nerf.kill();
         this.player.animations.play('dead');
         this.player.body.velocity.y = -200;
-        this.beam = this.game.add.sprite(0, 0, 'beam');
     },
     
     win: function() {
         this.player.kill();
+        this.ohnoSound.stop();
+        this.beamSound.stop();
+        this.bass.stop();
+        this.drums.stop();
+        this.synth1.stop();
         game.state.start('play1');
     }
 };

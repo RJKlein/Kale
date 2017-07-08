@@ -7,6 +7,18 @@ var loadState= {
         
 
         // load assets
+        
+        game.load.audio('blink', 'assets/spaceman.wav');
+        game.load.audio('beamsound', 'assets/beam-sound.mp3');
+        game.load.audio('gameoversound', 'assets/gameover-sound.mp3');
+        game.load.audio('jumpsound', 'assets/jump-sound.wav');
+        game.load.audio('ohnosound', 'assets/oh-no.wav');
+        game.load.audio('ouchsound', 'assets/ouch.wav');
+        game.load.audio('blaster', 'assets/blaster.mp3');
+        game.load.audio('bass', 'assets/bass.mp3');
+        game.load.audio('drums', 'assets/drums.mp3');
+        game.load.audio('synth1', 'assets/synth1.mp3');
+        
         game.load.image('goal', 'assets/goal.png');
         game.load.image('beam', 'assets/beam.png');
         game.load.image('nerf', 'assets/nerf.png');
@@ -21,6 +33,7 @@ var loadState= {
         game.load.image('planet', 'assets/planet.png');
         game.load.image('ground2', 'assets/mars.png');
         game.load.image('gameover', 'assets/gameover.jpg');
+        
         game.load.atlas('player','assets/spritesheet.png', 'assets/sprites.json');
         game.load.atlas('kane','assets/kanesheet.png', 'assets/kane.json');
         

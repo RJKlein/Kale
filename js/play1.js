@@ -4,15 +4,24 @@ var play1State = {
     create: function() {
    
         // Our controls.
-        cursors = game.input.keyboard.createCursorKeys();
-        this.fire = 30;
-        this.kaneFire = 30;
+        cursors = game.input.keyboard.createCursorKeys();   
         this.wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
         this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
         this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
         this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
         this.bKey = game.input.keyboard.addKey(Phaser.Keyboard.B);
         this.bKey.onDown.add(playState.flipDebug, this);
+        
+        // audio
+        this.blaster = game.add.audio('blaster');
+        this.jumpSound = game.add.audio('jumpsound');
+        this.ohnoSound = game.add.audio('ohnosound');
+        this.bass = game.add.audio('bass');         
+        this.bass.loop = true;
+         
+        //timers
+        this.fire = 30;
+        this.kaneFire = 30;
         
         // Here we create the ground.
         this.ground = game.add.sprite(0, game.world.height - 64, 'ground2');
@@ -70,6 +79,8 @@ var play1State = {
         this.kaneNerf = game.add.sprite(480, 425, 'nerf');
         this.nerfInit(this.kaneNerf);
         
+        this.bass.play();   
+        this.bass.onLoop.add(this.playMusic, this);
     },
     
     render: function() {
@@ -118,6 +129,7 @@ var play1State = {
             // start a jump
             this.player.body.velocity.y = -200;
             this.player.animations.play('jump');
+            this.jumpSound.play();
         }
         else
         {
@@ -151,6 +163,7 @@ var play1State = {
             // start a jump
             this.kane.body.velocity.y = -200;
             this.kane.animations.play('jump');
+            this.jumpSound.play();
         }
         else
         {
@@ -171,14 +184,14 @@ var play1State = {
         
             this.fire = 0;
             this.playerFire(sprite, this.playerNerf)
-
+            this.blaster.play();
             break;
         
         case 'kanefire':
         
             this.kaneFire = 0;
             this.playerFire(sprite, this.kaneNerf)
-        
+            this.blaster.play();
             break;
         
         case 'playerdead':
@@ -205,9 +218,17 @@ var play1State = {
             nerf.body.velocity.x = Math.sign(sprite.scale.x) * 250;
             nerf.body.setSize(45, 23, - 22 + Math.sign(sprite.scale.x) * 22, 0);
     },
-            
+
+    playMusic: function() {
+        // cleanup audio incase loop and stop occur too close together
+        this.bass.stop();
+        this.bass.play();
+    },
+     
     playerHit: function(sprite, nerf){
         //	start a death sequence
+        this.bass.stop();
+        this.ohnoSound.play();
         nerf.kill();
         this.fire = 90;
         this.kaneFire = 90;
