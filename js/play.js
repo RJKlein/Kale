@@ -157,7 +157,6 @@ var playState = {
     },
 
     playBeam: function() {
-        // cleanup audio incase loop and stop occur too close together
         this.beamSound.play();
         this.beam = this.game.add.sprite(0, 0, 'beam');
     },

@@ -3,7 +3,10 @@ var menuState = {
         
         //	A simple background for our menu
         game.add.sprite(0, 0, 'sky');
-        this.blink = game.add.audio('blink')
+        this.themeSound = game.add.audio('theme');
+        this.themeSound.loop = true;
+        this.blink = game.add.audio('blink');
+        
         // create the player sprite and enable physics
         this.player = game.add.sprite(550, 256, 'player');
         this.player.scale.setTo(-1, 1);
@@ -32,6 +35,9 @@ var menuState = {
         oneKey.onDown.addOnce(this.start,this);
         twoKey.onDown.addOnce(this.start,this);
 
+        this.themeSound.play();   
+        this.themeSound.onLoop.add(this.playAgain, this);
+
         //	Timer event to give motion and activity every 1/4 second to Kane for Main menu
         game.time.events.loop(Phaser.Timer.SECOND/4, this.actionTime, this);       
         
@@ -47,6 +53,7 @@ var menuState = {
         
     // start function calls the play state based on the key that was pressed
     start: function(item) {
+        this.themeSound.stop();
         switch(item.event.code) {
             case 'Digit1':
                 game.state.start('play');
@@ -57,6 +64,10 @@ var menuState = {
             default:
                 game.state.start('play1');
         }     
+    },
+    
+    playAgain: function() {
+        this.themeSound.play();
     },
     
     // function to give life to menu screen

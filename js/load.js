@@ -8,6 +8,7 @@ var loadState= {
 
         // load assets
         
+        game.load.audio('theme', 'assets/theme.wav');
         game.load.audio('blink', 'assets/spaceman.wav');
         game.load.audio('beamsound', 'assets/beam-sound.mp3');
         game.load.audio('gameoversound', 'assets/gameover-sound.mp3');
