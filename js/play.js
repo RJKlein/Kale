@@ -49,10 +49,14 @@ var playState = {
                 
         // Our controls.
         cursors = game.input.keyboard.createCursorKeys();
-        this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        this.wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+        this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+        this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
+        this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
         this.bKey = game.input.keyboard.addKey(Phaser.Keyboard.B);
-        this.bKey.onDown.add(this.flipDebug, this);        
+        this.bKey.onDown.add(function(){game.debugFlag = !game.debugFlag;});        
 
+        
         // create the player sprite and enable physics
         this.player = game.add.sprite(16, -220, 'player');
         game.physics.enable(this.player, Phaser.Physics.ARCADE);
@@ -63,6 +67,35 @@ var playState = {
 
         // create foreground last
         this.back1 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back1').height, this.game.width, this.game.cache.getImage('back1').height,'back1');
+        
+
+        // our touch controls and help tips
+        this.left = false;
+        this.right = false;
+        this.jump = false;
+        this.wLabel = game.add.text(50, 470, 'W', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        this.aLabel = game.add.text(25, 520, 'A', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        this.dLabel = game.add.text(95, 520, 'D', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        
+        // Enable events on the two labels
+        this.wLabel.inputEnabled = true;
+        this.aLabel.inputEnabled = true;
+        this.dLabel.inputEnabled = true;
+
+        this.wLabel.events.onInputOver.add(function(){playState.jump=true;});
+        this.wLabel.events.onInputOut.add(function(){playState.jump=false;});
+        this.wLabel.events.onInputDown.add(function(){playState.jump=true;});
+        this.wLabel.events.onInputUp.add(function(){playState.jump=false;});
+        
+        this.aLabel.events.onInputOver.add(function(){playState.left=true;});
+        this.aLabel.events.onInputOut.add(function(){playState.left=false;});
+        this.aLabel.events.onInputDown.add(function(){playState.left=true;});
+        this.aLabel.events.onInputUp.add(function(){playState.left=false;});
+        
+        this.dLabel.events.onInputOver.add(function(){playState.right=true;});
+        this.dLabel.events.onInputOut.add(function(){playState.right=false;});
+        this.dLabel.events.onInputDown.add(function(){playState.right=true;});
+        this.dLabel.events.onInputUp.add(function(){playState.right=false;});
         
         // create the goal sprite and enable physics
         this.goal = game.add.sprite(820, 256, 'goal');
@@ -119,21 +152,21 @@ var playState = {
         {
             this.delay--;            
         }
-        else if (this.spaceKey.isDown) 
+        else if (this.wKey.isDown || this.jump) 
         {
             //	start a jump
             this.player.body.velocity.y = -200;
             this.player.animations.play('jump');
             this.jumpSound.play();
         }
-        else if (cursors.left.isDown)
+        else if (this.aKey.isDown || this.left)
         {
             //	Move to the left
             this.player.scale.setTo(-1,1);
             this.player.body.velocity.x = -100;
             this.player.animations.play('run');
         }
-        else if (cursors.right.isDown)
+        else if (this.dKey.isDown || this.right)
         {
             //	Move to the right
             this.player.scale.setTo(1,1);
@@ -151,11 +184,6 @@ var playState = {
 
     },
     
-    // flip debug enable
-    flipDebug: function(){
-        game.debugFlag = !game.debugFlag;
-    },
-
     playBeam: function() {
         this.beamSound.play();
         this.beam = this.game.add.sprite(0, 0, 'beam');

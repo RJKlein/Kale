@@ -5,6 +5,9 @@ var loadState= {
         // add a loading label on screen
         var loadLabel = game.add.text(80, 150, 'loading...',{font: '30px Courier', fill: '#ffffff'});
         
+        // fullscreen setup
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
 
         // load assets
         
@@ -42,6 +45,7 @@ var loadState= {
     
     create: function() {
         // Call menu state
+        //if (!game.device.desktop){ game.input.onDown.add(gofull, this); } //go fullscreen on mobile devices
         game.state.start('menu');
     }
 };
