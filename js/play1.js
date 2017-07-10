@@ -9,8 +9,8 @@ var play1State = {
         this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
         this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
         this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
-        this.bKey = game.input.keyboard.addKey(Phaser.Keyboard.B);
-        this.bKey.onDown.add(playState.flipDebug, this);
+        this.debugKey = game.input.keyboard.addKey(Phaser.Keyboard.B);
+        this.sKey.onDown.add(function(){game.debugFlag = !game.debugFlag;});        
         
         // audio
         this.blaster = game.add.audio('blaster');
@@ -81,7 +81,64 @@ var play1State = {
         
         this.bass.play();   
         this.bass.onLoop.add(this.playMusic, this);
-    },
+
+        // our touch controls and help tips
+        this.left = false;
+        this.right = false;
+        this.jump = false;
+        this.wLabel = game.add.text(50, 470, 'W', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        this.aLabel = game.add.text(25, 520, 'A', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        this.dLabel = game.add.text(95, 520, 'D', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        
+        // Enable events on the two labels
+        this.wLabel.inputEnabled = true;
+        this.aLabel.inputEnabled = true;
+        this.dLabel.inputEnabled = true;
+
+        this.wLabel.events.onInputOver.add(function(){play1State.jump=true;});
+        this.wLabel.events.onInputOut.add(function(){play1State.jump=false;});
+        this.wLabel.events.onInputDown.add(function(){play1State.jump=true;});
+        this.wLabel.events.onInputUp.add(function(){play1State.jump=false;});
+        
+        this.aLabel.events.onInputOver.add(function(){play1State.left=true;});
+        this.aLabel.events.onInputOut.add(function(){play1State.left=false;});
+        this.aLabel.events.onInputDown.add(function(){play1State.left=true;});
+        this.aLabel.events.onInputUp.add(function(){play1State.left=false;});
+        
+        this.dLabel.events.onInputOver.add(function(){play1State.right=true;});
+        this.dLabel.events.onInputOut.add(function(){play1State.right=false;});
+        this.dLabel.events.onInputDown.add(function(){play1State.right=true;});
+        this.dLabel.events.onInputUp.add(function(){play1State.right=false;});
+
+        // Kane's touch controls and help tips
+        this.kaneLeft = false;
+        this.kaneRight = false;
+        this.kaneJump = false;
+        this.upLabel = game.add.text(700, 470, '^', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        this.leftLabel = game.add.text(675, 520, '<', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        this.rightLabel = game.add.text(745, 520, '>', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        
+        // Enable events on the two labels
+        this.upLabel.inputEnabled = true;
+        this.leftLabel.inputEnabled = true;
+        this.rightLabel.inputEnabled = true;
+
+        this.upLabel.events.onInputOver.add(function(){play1State.kaneJump=true;});
+        this.upLabel.events.onInputOut.add(function(){play1State.kaneJump=false;});
+        this.upLabel.events.onInputDown.add(function(){play1State.kaneJump=true;});
+        this.upLabel.events.onInputUp.add(function(){play1State.kaneJump=false;});
+        
+        this.leftLabel.events.onInputOver.add(function(){play1State.kaneLeft=true;});
+        this.leftLabel.events.onInputOut.add(function(){play1State.kaneLeft=false;});
+        this.leftLabel.events.onInputDown.add(function(){play1State.kaneLeft=true;});
+        this.leftLabel.events.onInputUp.add(function(){play1State.kaneLeft=false;});
+        
+        this.rightLabel.events.onInputOver.add(function(){play1State.kaneRight=true;});
+        this.rightLabel.events.onInputOut.add(function(){play1State.kaneRight=false;});
+        this.rightLabel.events.onInputDown.add(function(){play1State.kaneRight=true;});
+        this.rightLabel.events.onInputUp.add(function(){play1State.kaneRight=false;});
+        
+},
     
     render: function() {
          if (game.debugFlag)
@@ -112,19 +169,19 @@ var play1State = {
         {
             this.fire--;           
         }
-        else if (this.aKey.isDown && !this.playerNerf.alive) 
+        else if ((this.left || this.aKey.isDown) && !this.playerNerf.alive) 
         {
             // start a attack
             this.fire = 40;
             this.player.animations.play('attack');
         }
-        else if (this.dKey.isDown && !this.playerNerf.alive)
+        else if ((this.dKey.isDown || this.right) && !this.playerNerf.alive)
         {
             // start a fire
             this.fire = 60;
             this.player.animations.play('fire');
         }
-        else if (this.wKey.isDown) 
+        else if (this.wKey.isDown || this.jump) 
         {
             // start a jump
             this.player.body.velocity.y = -200;
@@ -146,19 +203,19 @@ var play1State = {
         {
             this.kaneFire--;           
         }
-        else if (cursors.left.isDown && !this.kaneNerf.alive)
+        else if ((this.kaneLeft || cursors.left.isDown) && !this.kaneNerf.alive)
         {
             // start a fire
             this.kaneFire = 60;
             this.kane.animations.play('fire');
         }
-        else if (cursors.right.isDown && !this.kaneNerf.alive)
+        else if ((this.kaneRight || cursors.right.isDown) && !this.kaneNerf.alive)
         {
             // start a fire
             this.kaneFire = 40;
             this.kane.animations.play('attack');
         }
-        else if (cursors.up.isDown) 
+        else if (this.kaneJump || cursors.up.isDown) 
         {
             // start a jump
             this.kane.body.velocity.y = -200;

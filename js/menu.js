@@ -1,5 +1,6 @@
 var menuState = {
     create: function() {
+        if (!game.device.desktop){ game.input.onDown.add(function() { game.scale.startFullScreen(false);}); } //go fullscreen on mobile devices
         
         //	A simple background for our menu
         game.add.sprite(0, 0, 'sky');
@@ -22,22 +23,25 @@ var menuState = {
         this.player.events.onInputDown.add(this.listener, this);
    
         // place game title on menu screen
-        var nameLabel = game.add.text(40, 80, 'ADVENTURES OF KALE', { font: '50px Comic Sans MS', fill: '#ffffff' });
+        var nameLabel = game.add.text(260, 20, 'THE', { font: '50px Comic Sans MS', fill: '#ffffff' });
+        var name1Label = game.add.text(40, 80, 'ADVENTURES OF KALE', { font: '50px Comic Sans MS', fill: '#ffffff' });
         
         // place menu instructions on menu screen
         var start1Label = game.add.text(80, 160, 'SINGLE PLAYER', { font: '40px Comic Sans MS', fill: '#ffffff' });
         var start2Label = game.add.text(80, 240, 'MULTIPLAYER', { font: '40px Comic Sans MS', fill: '#ffffff' });
-        var startLabel = game.add.text(80, 520, 'Select number of players to start', { font: '25px Comic Sans MS', fill: '#ffffff' });
         
-		//	the keyboard numeric handler
-		var oneKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-        var twoKey = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
-        oneKey.onDown.addOnce(this.start,this);
-        twoKey.onDown.addOnce(this.start,this);
-
+        // Enable events on the two labels
+        start1Label.inputEnabled = true;
+        start2Label.inputEnabled = true;
+        
+        // add theme music
         this.themeSound.play();   
         this.themeSound.onLoop.add(this.playAgain, this);
 
+
+        start1Label.events.onInputDown.addOnce(this.start, this);
+        start2Label.events.onInputDown.addOnce(this.start, this);
+         
         //	Timer event to give motion and activity every 1/4 second to Kane for Main menu
         game.time.events.loop(Phaser.Timer.SECOND/4, this.actionTime, this);       
         
@@ -54,11 +58,11 @@ var menuState = {
     // start function calls the play state based on the key that was pressed
     start: function(item) {
         this.themeSound.stop();
-        switch(item.event.code) {
-            case 'Digit1':
+        switch(item.text) {
+            case 'SINGLE PLAYER':
                 game.state.start('play');
                 break;
-            case 'Digit2':
+            case 'MULTIPLAYER':
                 game.state.start('play1');
                 break;
             default:

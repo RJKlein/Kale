@@ -2,20 +2,21 @@ var winState = {
     create: function() {
         
         //	A simple background for our menu
-        game.add.sprite(0, 0, 'gameover');
+        this.backGround = game.add.sprite(0, 0, 'gameover');
         
         // place restart instructions on menu screen
-        var startLabel = game.add.text(300, game.world.height-60, 'press SpaceBar for MENU', { font: '25px Arial', fill: '#ffffff' });
+        var startLabel = game.add.text(300, game.world.height-60, 'Touch for MENU', { font: '25px Arial', fill: '#ffffff' });
         this.gameoversound = game.add.audio('gameoversound');
         this.gameoversound.play();    
 
-		//	the "space to restart" handler
-        this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        this.spaceKey.onDown.addOnce(this.restart,this); 
+		//	the "space or touch to restart" handler
+        this.backGround.inputEnabled = true;
+        this.backGround.events.onInputDown.addOnce(this.restart, this);
     },
     
     // start function calls the play state
     restart: function() {
+        this.gameoversound.stop();    
         game.state.start('menu');
     }
 };
