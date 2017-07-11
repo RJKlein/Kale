@@ -13,7 +13,7 @@ var playState = {
         this.ohnoSound = game.add.audio('ohnosound');
         this.bass.loop = true;
         
-        // delay timer
+        // delay timer for debounce 
         this.delay = 60;
         // Here we create the ground.
         this.ground = game.add.sprite(0, game.world.height - 64, 'ground2');
@@ -25,17 +25,22 @@ var playState = {
         // This enable physics on the ground
         this.ground.enableBody = true;
         
-        // This stops it from falling away when you jump on it
+        // This stops the ground from falling away when you jump on it
         this.ground.body.immovable = true;
-
-        this.wall = game.add.sprite(-110, 64, 'ground2');
-        game.physics.enable(this.wall, Phaser.Physics.ARCADE);
-        this.wall.body.setSize(10, 400, 0, 0);
         
-        // This enable physics on the ground
+        // add a blocking wall to the left side of screen to prevent player from running off screen
+        this.wall = game.add.sprite(-110, 64, 'ground2');
+        
+        // enable physics on the wall 
+        game.physics.enable(this.wall, Phaser.Physics.ARCADE);
+        
+        // set the size so it is big enough to block player
+        this.wall.body.setSize(10, 400, 0, 0);
+      
+        // This enable physics on the wall
         this.wall.enableBody = true;
         
-        // This stops it from falling away when you jump on it
+        // This stops the wall from falling away when you bump it
         this.wall.body.immovable = true;
         
         // A Parallax background for our game each panel is a single tile the size of the game height & width and will wrap 
@@ -47,27 +52,27 @@ var playState = {
         this.back2 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back2').height, this.game.width, this.game.cache.getImage('back2').height,'back2');
         this.beam = this.game.add.sprite(0, 0, 'beam');
                 
-        // Our controls.
+        // Our keyboard controls.
         cursors = game.input.keyboard.createCursorKeys();
         this.wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
         this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
         this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
         this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+        
+        // our debug keys too show hitboxes and diags
         this.bKey = game.input.keyboard.addKey(Phaser.Keyboard.B);
         this.bKey.onDown.add(function(){game.debugFlag = !game.debugFlag;});        
-
         
         // create the player sprite and enable physics
         this.player = game.add.sprite(16, -220, 'player');
         game.physics.enable(this.player, Phaser.Physics.ARCADE);
 
-        // Player physics properties. Give KALE a slight bounce.
+        // Player physics properties. Give the player a slight bounce.
         this.player.body.bounce.y = 0.2;
         this.player.body.gravity.y = 125;
 
-        // create foreground last
+        // create last layer of foreground last so it is on top
         this.back1 = this.game.add.tileSprite(0, this.game.height - this.game.cache.getImage('back1').height, this.game.width, this.game.cache.getImage('back1').height,'back1');
-        
 
         // our touch controls and help tips
         this.left = false;
@@ -77,7 +82,7 @@ var playState = {
         this.aLabel = game.add.text(25, 520, 'A', { font: '60px Comic Sans MS', fill: '#ffffff' });
         this.dLabel = game.add.text(95, 520, 'D', { font: '60px Comic Sans MS', fill: '#ffffff' });
         
-        // Enable events on the two labels
+        // Enable events on the labels
         this.wLabel.inputEnabled = true;
         this.aLabel.inputEnabled = true;
         this.dLabel.inputEnabled = true;
@@ -147,7 +152,7 @@ var playState = {
             this.createNerf();
         };
         
-        // check controls for jumping or moving left or right
+        // check controls for jumping or moving left or right use debounce timer and on ground 
         if (this.delay > 0 || !this.player.body.touching.down)
         {
             this.delay--;            
@@ -175,6 +180,7 @@ var playState = {
         }
         else
         {
+            // reset player to rest position
             this.player.animations.play('idle');
             this.player.animations.stop();
             
@@ -194,20 +200,23 @@ var playState = {
         this.bass.stop();
         this.drums.stop();
         this.synth1.stop();
+        
+        // start new music loop
         this.bass.play();
         this.drums.play();
         this.synth1.play();
     },
     
     collisionCallback: function(sprite1, sprite2){
+        // function when bullet hits ground to disable the beam
         playState.beam.kill();
         if (playState.beamSound.isPlaying){
             playState.beamSound.stop();
         }
     },
 
-    // function to scroll background based on character movement and layer depth
     scrollBackground: function() {
+        // function to scroll background based on character movement and layer depth
         this.back7.tilePosition.x -= .1/100 * this.player.body.velocity.x;
         this.back6.tilePosition.x -= .3/100 * this.player.body.velocity.x;
         this.back5.tilePosition.x -= .75/100 * this.player.body.velocity.x;
@@ -217,8 +226,8 @@ var playState = {
         this.back1.tilePosition.x -= 8/100 * this.player.body.velocity.x;    
     },
 
-    // Our animations, all are runOnce (false).
     loadAnimations: function(sprite, fileName) {
+        // Our animations, all are runOnce (false).
         sprite.animations.add('fire', Phaser.Animation.generateFrameNames(fileName + '_fire_', 1, 8), 15, false); 
         sprite.animations.add('attack', Phaser.Animation.generateFrameNames(fileName + '_attack_', 1, 4), 12, false); 
         sprite.animations.add('jump', [fileName + '_jump_1', fileName + '_jump_2', fileName + '_jump_3', fileName + '_jump_3', fileName + '_jump_4', fileName + '_jump_4', fileName + '_jump_4', fileName + '_jump_3'], 5, false);           
@@ -228,6 +237,7 @@ var playState = {
     },
     
     createNerf: function() {
+        // creates the nerf dart and sends across the screeb
         this.playerNerf = game.add.sprite(790, 440, 'nerf');
         this.playerNerf.scale.setTo(-2,2);
         game.physics.enable(this.playerNerf, Phaser.Physics.ARCADE);
@@ -250,6 +260,7 @@ var playState = {
     },
     
     win: function() {
+        // end of level function for player hitting goal
         this.player.kill();
         this.ohnoSound.stop();
         this.beamSound.stop();

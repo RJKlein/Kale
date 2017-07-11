@@ -9,8 +9,7 @@ var loadState= {
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
 
-        // load assets
-        
+        // load assets    
         game.load.audio('theme', 'assets/theme.wav');
         game.load.audio('blink', 'assets/spaceman.wav');
         game.load.audio('beamsound', 'assets/beam-sound.mp3');
@@ -45,7 +44,6 @@ var loadState= {
     
     create: function() {
         // Call menu state
-        //if (!game.device.desktop){ game.input.onDown.add(gofull, this); } //go fullscreen on mobile devices
         game.state.start('menu');
     }
 };
