@@ -1,6 +1,6 @@
 var menuState = {
     create: function() {
-        if (!game.device.desktop){ game.input.onDown.add(function() { game.scale.startFullScreen(false);}); } //go fullscreen on mobile devices
+        game.input.onDown.add(function() { game.scale.startFullScreen(false);}); //go fullscreen on touchmobile
         
         //	A simple background for our menu
         game.add.sprite(0, 0, 'sky');
