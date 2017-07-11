@@ -9,13 +9,14 @@ var winState = {
         this.gameoversound = game.add.audio('gameoversound');
         this.gameoversound.play();    
 
-		//	the "space or touch to restart" handler
+		//	the "touch to restart" handler
         this.backGround.inputEnabled = true;
         this.backGround.events.onInputDown.addOnce(this.restart, this);
     },
     
-    // start function calls the play state
+
     restart: function() {
+        // start function calls the play state
         this.gameoversound.stop();    
         game.state.start('menu');
     }

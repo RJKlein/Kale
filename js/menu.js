@@ -18,7 +18,7 @@ var menuState = {
         this.player.animations.add('idle', ['green_idle_1', 'green_idle_2', 'green_idle_3', 'green_idle_2', 'green_idle_1'], 10, false);
         this.player.animations.play('idle');
         
-        //  Enables all kind of input actions on this image (click, etc)
+        //  Enables all input actions on this image for tickle me elmo effect
         this.player.inputEnabled = true;
         this.player.events.onInputDown.add(this.listener, this);
    
@@ -30,15 +30,16 @@ var menuState = {
         var start1Label = game.add.text(80, 160, 'SINGLE PLAYER', { font: '40px Comic Sans MS', fill: '#ffffff' });
         var start2Label = game.add.text(80, 240, 'MULTIPLAYER', { font: '40px Comic Sans MS', fill: '#ffffff' });
         
-        // Enable events on the two labels
-        start1Label.inputEnabled = true;
-        start2Label.inputEnabled = true;
         
         // add theme music
         this.themeSound.play();   
         this.themeSound.onLoop.add(this.playAgain, this);
 
+        // Enable events on the two labels
+        start1Label.inputEnabled = true;
+        start2Label.inputEnabled = true;
 
+        // Add on click events to labels for level select
         start1Label.events.onInputDown.addOnce(this.start, this);
         start2Label.events.onInputDown.addOnce(this.start, this);
          
@@ -47,6 +48,7 @@ var menuState = {
         
         },
 
+    // listener event for on click on sprite to blink and play cute sound    
     listener: function() {
         if (!this.blink.isPlaying) {       
             this.player.animations.play('idle');
@@ -57,7 +59,9 @@ var menuState = {
         
     // start function calls the play state based on the key that was pressed
     start: function(item) {
+        // clean up audio before moving on
         this.themeSound.stop();
+        // choose level based on selection    
         switch(item.text) {
             case 'SINGLE PLAYER':
                 game.state.start('play');
@@ -83,8 +87,7 @@ var menuState = {
         // 5% of the events should cause Kane to blink(play 1 full reel of the idle animation)
         if (!this.blink.isPlaying && (Math.random() * 100) > 95)
         {       
-        this.player.animations.play('idle');
-        this.blink.play();
+        this.listener();
         }
     }
 };

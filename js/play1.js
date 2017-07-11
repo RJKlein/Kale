@@ -114,7 +114,7 @@ var play1State = {
         this.kaneLeft = false;
         this.kaneRight = false;
         this.kaneJump = false;
-        this.upLabel = game.add.text(700, 470, '^', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        this.upLabel = game.add.text(705, 470, '^', { font: '60px Comic Sans MS', fill: '#ffffff' });
         this.leftLabel = game.add.text(675, 520, '<', { font: '60px Comic Sans MS', fill: '#ffffff' });
         this.rightLabel = game.add.text(745, 520, '>', { font: '60px Comic Sans MS', fill: '#ffffff' });
         
