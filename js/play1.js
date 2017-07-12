@@ -86,9 +86,9 @@ var play1State = {
         this.left = false;
         this.right = false;
         this.jump = false;
-        this.wLabel = game.add.text(50, 470, 'W', { font: '60px Comic Sans MS', fill: '#ffffff' });
-        this.aLabel = game.add.text(25, 520, 'A', { font: '60px Comic Sans MS', fill: '#ffffff' });
-        this.dLabel = game.add.text(95, 520, 'D', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        this.wLabel = game.add.text(50, 470, 'W', { font: '80px Comic Sans MS', fill: '#ffffff' });
+        this.aLabel = game.add.text(25, 520, 'A', { font: '80px Comic Sans MS', fill: '#ffffff' });
+        this.dLabel = game.add.text(95, 520, 'D', { font: '80px Comic Sans MS', fill: '#ffffff' });
         
         // Enable events on the two labels
         this.wLabel.inputEnabled = true;
@@ -114,9 +114,9 @@ var play1State = {
         this.kaneLeft = false;
         this.kaneRight = false;
         this.kaneJump = false;
-        this.upLabel = game.add.text(705, 470, '^', { font: '60px Comic Sans MS', fill: '#ffffff' });
-        this.leftLabel = game.add.text(675, 520, '<', { font: '60px Comic Sans MS', fill: '#ffffff' });
-        this.rightLabel = game.add.text(745, 520, '>', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        this.upLabel = game.add.text(710, 470, '^', { font: '90px Comic Sans MS', fill: '#ffffff' });
+        this.leftLabel = game.add.text(675, 520, '<', { font: '80px Comic Sans MS', fill: '#ffffff' });
+        this.rightLabel = game.add.text(745, 520, '>', { font: '80px Comic Sans MS', fill: '#ffffff' });
         
         // Enable events on the two labels
         this.upLabel.inputEnabled = true;

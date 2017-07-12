@@ -78,9 +78,9 @@ var playState = {
         this.left = false;
         this.right = false;
         this.jump = false;
-        this.wLabel = game.add.text(50, 470, 'W', { font: '60px Comic Sans MS', fill: '#ffffff' });
-        this.aLabel = game.add.text(25, 520, 'A', { font: '60px Comic Sans MS', fill: '#ffffff' });
-        this.dLabel = game.add.text(95, 520, 'D', { font: '60px Comic Sans MS', fill: '#ffffff' });
+        this.wLabel = game.add.text(50, 470, 'W', { font: '80px Comic Sans MS', fill: '#ffffff' });
+        this.aLabel = game.add.text(25, 520, 'A', { font: '80px Comic Sans MS', fill: '#ffffff' });
+        this.dLabel = game.add.text(95, 520, 'D', { font: '80px Comic Sans MS', fill: '#ffffff' });
         
         // Enable events on the labels
         this.wLabel.inputEnabled = true;
